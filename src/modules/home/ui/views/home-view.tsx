@@ -2,16 +2,21 @@
 
 import { Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
+import { useTRPC } from '@/trpc/client'
+import { useQuery } from '@tanstack/react-query'
 
 interface HomeViewProps {}
 const HomeView = ({}: HomeViewProps) => {
-    const { data: session } = authClient.useSession()
-    if (!session) {
-        return <p>Loading</p>
-    }
+    const trpc = useTRPC()
+
+    const { data } = useQuery(
+        trpc.hello.queryOptions({
+            text: 'crane',
+        }),
+    )
     return (
         <div>
-            <Button onClick={() => {}}></Button>
+            <Button onClick={() => {}}>{data?.greeting}</Button>
         </div>
     )
 }

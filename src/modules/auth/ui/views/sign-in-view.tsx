@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
-
+import { FaGoogle, FaGithub } from 'react-icons/fa'
 const formSchema = z.object({
     email: z.string().email('Invalid email address'),
     password: z.string().min(1, { message: 'Password is required' }),
@@ -28,27 +28,44 @@ export const SignInView = () => {
             password: '',
         },
     })
-    // console.log(!!error)
-    console.log(!error)
-    // console.log(error)
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
         setError(null)
         setPending(true)
-        const { error } = await authClient.signIn.email(
+        await authClient.signIn.email(
             {
                 email: data.email,
                 password: data.password,
                 rememberMe: true,
+                callbackURL: '/',
             },
             {
                 onSuccess: () => {
                     setPending(false)
-                    router.push('/')
+                    // router.push('/')
                 },
                 onError: ({ error }) => {
                     setPending(false)
                     setError(error.message)
+                },
+            },
+        )
+    }
+    const onSocial = (provider: 'github' | 'google') => {
+        setError(null)
+        setPending(true)
+        authClient.signIn.social(
+            {
+                provider: provider,
+                callbackURL: '/',
+            },
+            {
+                onSuccess: () => {
+                    setPending(false)
+                },
+                onError: ({ error }) => {
+                    setError(error.message)
+                    setPending(false)
                 },
             },
         )
@@ -133,7 +150,9 @@ export const SignInView = () => {
                                         type='button'
                                         className='w-full'
                                         disabled={pending}
+                                        onClick={() => onSocial('google')}
                                     >
+                                        <FaGoogle />
                                         Google
                                     </Button>
                                     <Button
@@ -141,7 +160,9 @@ export const SignInView = () => {
                                         type='button'
                                         className='w-full'
                                         disabled={pending}
+                                        onClick={() => onSocial('github')}
                                     >
+                                        <FaGithub />
                                         Github
                                     </Button>
                                 </div>

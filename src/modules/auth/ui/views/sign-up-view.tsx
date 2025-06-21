@@ -12,7 +12,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { authClient } from '@/lib/auth-client'
-
+import { FaGoogle, FaGithub } from 'react-icons/fa'
 const formSchema = z
     .object({
         name: z.string().min(1, { message: 'Name is required' }),
@@ -179,7 +179,7 @@ export const SignUpView = () => {
                                         className='w-full'
                                         disabled={pending}
                                     >
-                                        Google
+                                        <FaGoogle /> Google
                                     </Button>
                                     <Button
                                         variant={'outline'}
@@ -187,17 +187,17 @@ export const SignUpView = () => {
                                         className='w-full'
                                         disabled={pending}
                                     >
-                                        Github
+                                        <FaGithub /> Github
                                     </Button>
                                 </div>
 
                                 <div className='text-center text-sm'>
                                     Dont&apos;t have an account{' '}
                                     <Link
-                                        href={'/sign-up'}
+                                        href={'/sign-in'}
                                         className='underline underline-offset-4'
                                     >
-                                        Sign up
+                                        Sign in
                                     </Link>
                                 </div>
                             </div>
